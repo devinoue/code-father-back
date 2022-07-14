@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 // import { prompt } from "./prompt";
 // console.log(prompt);
 export const getGptData = async (prompt: string) => {
-  const config = {
+  const config: AxiosRequestConfig = {
     method: "post",
     url: "https://api.openai.com/v1/engines/text-davinci-002/completions",
     headers: {
@@ -23,9 +23,10 @@ export const getGptData = async (prompt: string) => {
     },
   };
 
-  const res: any = await axios(config as any).catch(function (error) {
-    console.log(error);
-  });
-
-  return res.data["choices"][0]["text"];
+  try {
+    const res = await axios(config);
+    return res.data["choices"][0]["text"];
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };

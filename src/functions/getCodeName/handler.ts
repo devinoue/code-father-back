@@ -6,13 +6,18 @@ import { getGptData } from "./getGptData";
 import { prompt } from "./prompt";
 
 const handler: APIGatewayProxyHandlerV2 = async (event) => {
-  const hint = event?.queryStringParameters?.hint ?? "こんにちは世界";
-  const fullPrompt = `${prompt}${hint}\n`;
-
-  const result = await getGptData(fullPrompt);
-  return formatJSONResponse({
-    data: result,
-  });
+  try {
+    const hint = event?.queryStringParameters?.hint ?? "こんにちは世界";
+    const fullPrompt = `${prompt}${hint}\n`;
+    const result = await getGptData(fullPrompt);
+    return formatJSONResponse({
+      data: result,
+    });
+  } catch (e) {
+    return formatJSONResponse({
+      error: e,
+    });
+  }
 };
 
 export const main = middyfy(handler);
